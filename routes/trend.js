@@ -1,7 +1,8 @@
 var express = require( 'express' );
 var router = express.Router();
 var _ = require( 'lodash' );
-var db = require( './../models' );
+var db = require( './../models' )
+var moment = require( 'moment' )
 var metrics_trend = require('./../models/metrics_trend.js');
 
 /* GET home page. */
@@ -21,7 +22,16 @@ router.get( '/', function(req, res){
 router.post( '/query', function(req, res){
 	var body = req.body;
 	if( body.url ){
-		db.Perf.findAll( {where:{url:body.url, updatedAt:{between:[new Date( body.start ), new Date( body.end )]}}} ).success( function(dbRes){
+		var attributes = [];
+		_.forEach( metrics_trend.metrics, function(item, index){
+			attributes.push( item.name );
+		} );
+		attributes.push( 'url' );
+		attributes.push( 'day' );
+
+		var startDate = moment( body.start ).format( 'YYYYMMDD' );
+		var endDate = moment( body.end ).format( 'YYYYMMDD' );
+		db.Perf.findAll( {where:{url:body.url, day:{between:[startDate, endDate]}}} ).success( function(dbRes){
 			var data = [];
 			_.forEach( dbRes, function(value, key){
 				data.push( value.dataValues );

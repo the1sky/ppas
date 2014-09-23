@@ -6,7 +6,7 @@ $( document ).ready( function(){
 	var today = $.getDateStr( 0 );
 	//var startDate = today;
 	//var endDate = today;
-	var startDate = $.getDateStr(0, '2014-08-20');
+	var startDate = $.getDateStr( 0, '2014-08-20' );
 	var endDate = $.getDateStr( 0, '2014-08-31' );
 
 	var chart_list = {};
@@ -77,32 +77,32 @@ $( document ).ready( function(){
 		var div = $( '<div></div>' );
 		div.attr( 'id', id );
 		div.addClass( 'trendChart' );
-		$( '#trend' ).append( div );
+		$( '#trend' ).prepend( div );
 		return {id:id, div:div}
 	};
 
 	var renderChart = function(jqObj){
-			var metric = jqObj.val();
-			var desc = jqObj.attr('desc');
-			var yAxisData = getYAxisData( selectedUrl, compUrl, metric, $.xAxisData );
-			var id = metric + '_chart';
-			chart_list[id] = createChartContainer( id );
-			var div = chart_list[id]['div'];
-			$( '#trend' ).append( div );
-			var chart = echarts.init( document.getElementById( id ), e_macarons );
-			chart_list[id].chart = chart;
+		var metric = jqObj.val();
+		var desc = jqObj.attr( 'desc' );
+		var yAxisData = getYAxisData( selectedUrl, compUrl, metric, $.xAxisData );
+		var id = metric + '_chart';
+		chart_list[id] = createChartContainer( id );
+		var div = chart_list[id]['div'];
+		$( '#trend' ).prepend( div );
+		var chart = echarts.init( document.getElementById( id ), e_macarons );
+		chart_list[id].chart = chart;
 
-			if( selectedUrl == compUrl ){
-				var legendData = [selectedUrl + '[1]', compUrl + '[2]'];
-			}else{
-				var legendData = [selectedUrl, compUrl];
-			}
-			if( yAxisData ){
-				chart.setOption( echartsOption( desc, legendData, $.xAxisData, yAxisData.selectedUrl, yAxisData.compUrl ) );
-			}
+		if( selectedUrl == compUrl ){
+			var legendData = [selectedUrl + '[1]', compUrl + '[2]'];
+		}else{
+			var legendData = [selectedUrl, compUrl];
+		}
+		if( yAxisData ){
+			chart.setOption( echartsOption( desc, legendData, $.xAxisData, yAxisData.selectedUrl, yAxisData.compUrl ) );
+		}
 
-			//滚动到
-		$.scrollTo(id);
+		//滚动到
+		$.scrollTo( 'metricslist' );
 	}
 
 	var removeChart = function(id){
@@ -118,7 +118,7 @@ $( document ).ready( function(){
 	}
 
 	var removeAllCharts = function(){
-		for( var id in chart_list){
+		for( var id in chart_list ){
 			removeChart( id );
 		}
 	}
@@ -133,14 +133,13 @@ $( document ).ready( function(){
 	} );
 	$( '.metriclist' ).on( 'ifChecked', function(e){
 		if( $.perfData ){
-			renderChart( $(this) );
+			renderChart( $( this ) );
 		}
 	} ).on( 'ifUnchecked', function(e){
 		var metric = $( this ).val();
 		var id = metric + '_chart';
 		removeChart( id );
 	} );
-
 
 	/**
 	 * 时间选择
@@ -164,10 +163,9 @@ $( document ).ready( function(){
 	} );
 
 	var getXAxisData = function(){
-
 		var len = $.perfData.length;
 		var daysObj = {};
-		for( var i = 0 ; i< len; i++ ){
+		for( var i = 0; i < len; i++ ){
 			var item = $.perfData[i];
 			var day = item.day;
 			daysObj[day] = 1;
@@ -179,10 +177,10 @@ $( document ).ready( function(){
 		return daysArr;
 	}
 
-	var getYAxisData = function(selectedUrl,compUrl,metric,daysArr){
+	var getYAxisData = function(selectedUrl, compUrl, metric, daysArr){
 		var len = $.perfData.length;
 		var urlData = {};
-		for( var i = 0 ; i< len; i++ ){
+		for( var i = 0; i < len; i++ ){
 			var item = $.perfData[i];
 			var url = item.url;
 			var day = item.day;
@@ -202,17 +200,17 @@ $( document ).ready( function(){
 		for( var i = 0; i < len; i++ ){
 			day = daysArr[i];
 			if( urlData[selectedUrl][day] !== undefined ){
-				selectUrlData.push( urlData[selectedUrl][day]);
+				selectUrlData.push( urlData[selectedUrl][day] );
 			}else{
 				selectUrlData.push( 0 );
 			}
 			if( urlData[compUrl][day] !== undefined ){
-				compUrlData.push( urlData[compUrl][day]);
+				compUrlData.push( urlData[compUrl][day] );
 			}else{
 				compUrlData.push( 0 );
 			}
 		}
-		return {selectedUrl:selectUrlData,compUrl:compUrlData};
+		return {selectedUrl:selectUrlData, compUrl:compUrlData};
 	}
 
 	/**
@@ -225,14 +223,14 @@ $( document ).ready( function(){
 
 			$.perfData = json.data;
 			$.xAxisData = getXAxisData()
-			var checked = $('.metriclist:checkbox:checked');
+			var checked = $( '.metriclist:checkbox:checked' );
 			var len = checked.length;
-			for( var i=0; i < len; i++ ){
+			for( var i = 0; i < len; i++ ){
 				var jqObj = $( checked[i] );
-					renderChart( jqObj );
+				renderChart( jqObj );
 			}
 		}else{
-			console.log('json data null!');
+			console.log( 'json data null!' );
 		}
 	}
 
