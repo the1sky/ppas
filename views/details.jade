@@ -1,0 +1,169 @@
+extends layout
+block content
+    include chart_template
+    #main
+        include urlselector
+        .perf_details
+            p.title 性能概况:
+                table.data-sheet(cellpadding='0', cellspacing='0')
+                    thead
+                        tr
+                            th 总请求数
+                            th 首屏时间
+                            th 白屏时间
+                            th DomReady时间点
+                            th onLoad时间点
+                            th 首字节时间
+                            th DOM数量
+                            th 页面绘制耗时
+                            th 脚本执行耗时
+                            th 网络请求耗时
+                    tbody.group-unfold
+                        tr.data-row
+                            td.column-name(style='')
+                                span#request_count_content.tb-c
+                                    strong 45
+                                    | 个
+                                td.column-status_desc
+                                    span#first_screen_time_content.tb-c
+                                        strong 800
+                                        | ms
+                                td.column-status_desc
+                                    span#white_screen_time_content.tb-c
+                                        strong 80
+                                        | ms
+                            td.column-tstatus(style='')
+                                span#domready_content.tb-c
+                                    strong 450
+                                    | ms
+                            td.column-start(style='')
+                                span#onload_content.tb-c
+                                    strong 680
+                                    | ms
+                                td.column-start(style='')
+                                    span#ttfb_content.tb-c
+                                        strong 100
+                                        | ms
+                                td.column-start(style='')
+                                    span#dom_count_content.tb-c
+                                        strong --
+                                        | 个
+                            td.column-per
+                                span#paint_time_content.tb-c
+                                    strong --
+                                    | ms
+                            td.column-pv
+                                span#js_time_content.tb-c
+                                    strong --
+                                    | ms
+                            td.column-ypv
+                                span#request_time_content.tb-c
+                                    strong --
+                                    | ms
+            p.title 资源分布:
+                ul.nav.nav-tabs(role='tablist')#dist_table
+                    li.active(role='presentation')
+                        a(href='#element_count',data-toggle='tab') 元素个数比例
+                    li(role='presentation')
+                        a(href='#element_size',data-toggle='tab') 元素大小比例
+                    li(role='presentation')
+                        a(href='#cache_time',data-toggle='tab') 缓存时间分布
+                div.tab-content
+                    div#element_count.tab-pane.active
+                        div.show
+                    div#element_size.tab-pane
+                        div.show testsdffffffffff
+                    div#cache_time.tab-pane
+                        div.show testsdffffffffff
+                    div#settings.tab-pane
+                        div.show testsdffffffffff
+            p.title 资源分析:
+                ul.nav.nav-tabs(role='tablist')#dist_table_detail
+                    li.active(role='presentation')
+                        a(href='#element_slow',data-toggle='tab') 最慢元素Top5
+                    li(role='presentation')
+                        a(href='#element_big',data-toggle='tab') 最大元素Top5
+                    //li(role='presentation')
+                        a(href='#cache_detail',data-toggle='tab') 缓存
+                    //li(role='presentation')
+                        a(href='#element_all',data-toggle='tab') 所有请求
+                    li(role='presentation')
+                        a(href='#dom_detail',data-toggle='tab') DOM复杂度
+                    li(role='presentation')
+                        a(href='#cookies_detail',data-toggle='tab') cookies
+                    li(role='presentation')
+                        a(href='#timing_detail',data-toggle='tab') timing
+                    li(role='presentation')
+                        a(href='#domain_detail',data-toggle='tab') domains
+                    li(role='presentation')
+                        a(href='#head_detail',data-toggle='tab') 头文件
+                    li(role='presentation')
+                        a(href='#global_var',data-toggle='tab') 全局变量
+                div.tab-content
+                    div#element_slow.tab-pane.active
+                    div#element_big.tab-pane
+                    div#element_all.tab-pane
+                    div#cache_detail.tab-pane
+                    div#timing_detail.tab-pane
+                    div#dom_detail.tab-pane
+                        ul.nav.nav-tabs(role='tablist')#dom_detail_tab
+                            li.active(role='presentation')
+                                a(href='#dom_count_detail',data-toggle='tab') dom数量
+                            li(role='presentation')
+                                a(href='#dom_max_depth_detail',data-toggle='tab') dom最大深度
+                            li(role='presentation')
+                                a(href='#dom_hidden_detail',data-toggle='tab') dom隐藏元素
+                            li(role='presentation')
+                                a(href='#dom_comment_detail',data-toggle='tab') dom中的注释
+                            li(role='presentation')
+                                a(href='#dom_inline_css_detail',data-toggle='tab') dom中内联样式
+                            li(role='presentation')
+                                a(href='#dom_white_space_detail',data-toggle='tab') dom中空白行
+                        div.tab-content
+                            div#dom_count_detail.tab-pane
+                            div#dom_max_depth_detail.tab-pane
+                            div#dom_comment_detail.tab-pane.active
+                            div#dom_hidden_detail.tab-pane
+                            div#dom_inline_css_detail.tab-pane
+                            div#dom_white_space_detail.tab-pane
+                    div#cookies_detail.tab-pane
+                        ul.nav.nav-tabs(role='tablist')#cookies_detail_tab
+                            li.active(role='presentation')
+                                a(href='#cookies_count_detail',data-toggle='tab') cookies数量:
+                            li(role='presentation')
+                                a(href='#cookies_domains_detail',data-toggle='tab') cookies域名:
+                        div.tab-content
+                            div#cookies_count_detail.tab-pane.active
+                            div#cookies_domains_detail.tab-pane
+                    div#domain_detail.tab-pane
+                        ul.nav.nav-tabs(role='tablist')#domain_detail_tab
+                            li.active(role='presentation')
+                                a(href='#domain_count_detail',data-toggle='tab') 域名列表:
+                            li(role='presentation')
+                                a(href='#domain_max_detail',data-toggle='tab') 最多资源域名:
+                        div.tab-content
+                            div#domain_count_detail.tab-pane.active
+                            div#domain_max_detail.tab-pane
+                    div#head_detail.tab-pane
+                        ul.nav.nav-tabs(role='tablist')#head_detail_tab
+                            li.active(role='presentation')
+                                a(href='#head_common_detail',data-toggle='tab') 头文件信息:
+                            li(role='presentation')
+                                a(href='#head_big_detail',data-toggle='tab') 大于body:
+                        div.tab-content
+                            div#head_common_detail.tab-pane.active
+                            div#head_big_detail.tab-pane
+                    div#global_var.tab-pane
+        div#settings.tab-pane
+            p.title 瀑布流图：
+            iframe(src='/harviewer/index.htm?path=./../hars/test.har&expand=true')#harviewer
+
+block customScript
+    script(src='/js/jquery.minimalect.js')
+    script(src='/js/echarts-plain.js')
+
+    script(src='/js/perf_details.js')
+
+block customCss
+    link(rel='stylesheet', href='/css/jquery.minimalect.css')
+

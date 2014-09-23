@@ -1,0 +1,19 @@
+//
+   Created by nant on 2014/8/29.
+
+.navbar(role='navigation')
+    .navbar-header
+        a.navbar-brand(href='/')
+            i.icon-rocket
+            span Page Analysis System
+
+    div.nav
+        a(href='/details')#menu_details 性能详情
+        a(href='/trend')#menu_trend 性能趋势
+        a(href='/comp')#menu_comp 对比分析
+
+    #addurl
+        .input-group
+            input.form-control(type='text',placeholder='请输入url...')
+            span.input-group-btn
+                button.btn.btn-default(type='button') 添加

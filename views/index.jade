@@ -1,0 +1,27 @@
+extends layout
+block content
+    script#url_list_t(type='x-tmpl-mustache')
+        {{#title}}
+        li.list-group-item.active
+            span.badge
+                {{badge}}
+            {{text}}
+        {{/title}}
+        {{#items}}
+        li.list-group-item
+            {{#badges}}
+            span.badge
+                {{badge}}
+            {{/badges}}
+            a(href='/details/?url={{content}}') {{content}}
+        {{/items}}
+
+    #main
+        p.title 任务概述：
+        include urlist
+block customScript
+    script(src='/js/perf_index.js')
+S
+
+
+
