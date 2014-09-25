@@ -22,6 +22,7 @@ router.post( '/query', function(req, res){
 	var body = req.body;
 	if( body.url ){
 		db.Perf.find( {where:{url:body.url}} ).success( function(dbRes){
+			if( !dbRes ) return;
 			var data = dbRes.dataValues;
 			var elementCountDistExtra = [];
 			var elementSizeDistExtra = [];

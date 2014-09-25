@@ -3,11 +3,11 @@
  */
 module.exports = function(sequelize, DataTypes){
 	var TaskUrls = sequelize.define( 'TaskUrls', {
-		url:{ type:DataTypes.STRING(255), allowNull:false, unique:true},
-		compurl:{ type:DataTypes.STRING(255), allowNull:false}
+		url:{ type:DataTypes.STRING(255), allowNull:false}
 	},{
 		timestamps: true,
-		comment: "task urls"
+		comment: "task urls",
+		engine: 'MYISAM'
 	} );
 	return TaskUrls;
 }

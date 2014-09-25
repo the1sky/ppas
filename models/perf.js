@@ -36,8 +36,8 @@ module.exports = function(sequelize, DataTypes){
 		headers_recv_size:{type:DataTypes.INTEGER, allowNull:true },
 		headers_bigger_than_content:{type:DataTypes.INTEGER, allowNull:true },
 		headers_bigger_than_content_offender:{type:DataTypes.TEXT, allowNull:true },
-		domreadyEvent:{type:DataTypes.INTEGER, allowNull:true },
-		onloadEvent:{type:DataTypes.INTEGER, allowNull:true },
+		domready_event:{type:DataTypes.INTEGER, allowNull:true },
+		onload_event:{type:DataTypes.INTEGER, allowNull:true },
 		global_variables:{type:DataTypes.INTEGER, allowNull:true },
 		global_variables_offender:{type:DataTypes.TEXT, allowNull:true },
 		global_variables_falsy:{type:DataTypes.INTEGER, allowNull:true },
@@ -53,7 +53,7 @@ module.exports = function(sequelize, DataTypes){
 		domains:{type:DataTypes.INTEGER, allowNull:true },
 		domains_offender:{type:DataTypes.TEXT, allowNull:true },
 		max_requests_per_domain:{type:DataTypes.STRING, allowNull:true },
-		max_requests_per_domain_offender:{type:DataTypes.INTEGER, allowNull:true },
+		max_requests_per_domain_offender:{type:DataTypes.TEXT, allowNull:true },
 		total_requests:{type:DataTypes.INTEGER, allowNull:true },
 		total_size:{type:DataTypes.STRING, allowNull:true },
 		html_requests:{type:DataTypes.INTEGER, allowNull:true },
@@ -84,11 +84,11 @@ module.exports = function(sequelize, DataTypes){
 		slow_requests_offender:{type:DataTypes.TEXT, allowNull:true},
 		big_requests:{type:DataTypes.INTEGER,allowNull:true},
 		big_requests_offender:{type:DataTypes.TEXT, allowNull:true},
-		dom_count:{type:DataTypes.INTEGER, allowNull:true},
-		timestamps:{type:DataTypes.NOW}
+		dom_count:{type:DataTypes.INTEGER, allowNull:true}
 	},{
 		timestamps: true,
-		comment: "perf"
+		comment: "perf",
+		engine: 'MYISAM'
 	} );
 
 	return Perf

@@ -6,13 +6,13 @@ $( document ).ready( function(){
 	/**
 	 * 回到顶部
 	 */
-	$.goup({
-		trigger: 100,
-		bottomOffset: 50,
-		locationOffset: 50,
-		title: '回到顶部',
-		titleAsText: true
-	});
+	$.goup( {
+		trigger:100,
+		bottomOffset:50,
+		locationOffset:50,
+		title:'回到顶部',
+		titleAsText:true
+	} );
 
 	/**
 	 * 获取request中的url
@@ -52,6 +52,8 @@ $( document ).ready( function(){
 	 * @param callback
 	 */
 	$.getTrendData = function(url, startDate, endDate, callback){
+		var re = /\n$/;
+		url = url.replace( re, "" );
 		$.ajax( {
 			'url':'/trend/query',
 			'type':'post',
@@ -141,19 +143,19 @@ $( document ).ready( function(){
 	 * @returns {*}
 	 * @constructor
 	 */
-	Date.prototype.Format = function (fmt) { //author: meizz
+	Date.prototype.Format = function(fmt){ //author: meizz
 		var o = {
-			"M+": this.getMonth() + 1, //月份
-			"d+": this.getDate(), //日
-			"h+": this.getHours(), //小时
-			"m+": this.getMinutes(), //分
-			"s+": this.getSeconds(), //秒
-			"q+": Math.floor((this.getMonth() + 3) / 3), //季度
-			"S": this.getMilliseconds() //毫秒
+			"M+":this.getMonth() + 1, //月份
+			"d+":this.getDate(), //日
+			"h+":this.getHours(), //小时
+			"m+":this.getMinutes(), //分
+			"s+":this.getSeconds(), //秒
+			"q+":Math.floor( (this.getMonth() + 3) / 3 ), //季度
+			"S":this.getMilliseconds() //毫秒
 		};
-		if (/(y+)/.test(fmt)) fmt = fmt.replace(RegExp.$1, (this.getFullYear() + "").substr(4 - RegExp.$1.length));
-		for (var k in o)
-			if (new RegExp("(" + k + ")").test(fmt)) fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)));
+		if( /(y+)/.test( fmt ) ) fmt = fmt.replace( RegExp.$1, (this.getFullYear() + "").substr( 4 - RegExp.$1.length ) );
+		for( var k in o )
+			if( new RegExp( "(" + k + ")" ).test( fmt ) ) fmt = fmt.replace( RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k]).substr( ("" + o[k]).length )) );
 		return fmt;
 	}
 

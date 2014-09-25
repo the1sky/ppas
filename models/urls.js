@@ -3,11 +3,11 @@
  */
 module.exports = function(sequelize, DataTypes){
 	var Urls = sequelize.define( 'Urls', {
-		url:{ type:DataTypes.STRING(255), allowNull:false, unique:true},
-		compurl:{ type:DataTypes.STRING(255), allowNull:false}
+		url:{ type:DataTypes.STRING(255), allowNull:false, unique:true}
 	},{
 		timestamps: true,
-		comment: "urls"
+		comment: "urls",
+		engine: 'MYISAM'
 	} );
 	return Urls;
 }

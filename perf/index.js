@@ -1,79 +1,118 @@
 /**
+ * run pagetimeline,cron
+ * save performace report
  *
  * Created by nant on 2014/8/24.
  */
 
-var runningId = 0;
 var ptModule = require( 'pagetimeline' );
 var lodash = require( 'lodash' );
 var db = require( './../models' );
-var moment = require('moment');
-var perf = {};
+var moment = require( 'moment' );
+var CronJob = require( 'cron' ).CronJob;
+var path = require( 'path' );
+var logger = require( '../log' ).logger;
 
-var pt = new ptModule( {url:'http://www.baidu.com', silent:true} );
+var runing = false;
+var runstep = 1;
+var ptConfig = path.resolve( __dirname, '../config/pagetimeline.json' );
+var pt = new ptModule( {config:ptConfig} );
 
 pt.on( 'report', function(res){
 	var result = JSON.parse( res );
-	var toSave = {};
 
-	toSave['url'] = result['url'];
-	toSave['runstep'] = result['runstep'];
-	toSave['uid'] = result['uid'];
-	toSave['platform'] = 'win32';
-	toSave['browser'] = 'chrome';
-	toSave['day'] = moment(result['timestamp'] ).format('YYYYMMDD');
+	var runstep = result['runstep']
+	var report = {};
+	report['url'] = result['url'];
+	report['runstep'] = runstep;
+	report['uid'] = result['uid'];
+	report['platform'] = result['platform'];
+	report['browser'] = result['browser'];
+	report['day'] = moment( result['timestamp'] ).format( 'YYYYMMDD' );
 
 	var metrics = result['metrics'];
 	var offenders = result['offenders'];
 	lodash.forEach( metrics, function(metricValue, metricKey){
 		if( metricKey == 'timing' ) return;
-
-		toSave[metricKey] = metricValue;
 		if( offenders[metricKey] ){
-			toSave[metricKey + '_offender'] = JSON.stringify( offenders[metricKey] );
+			report[metricKey + '_offender'] = JSON.stringify( offenders[metricKey] );
 		}
+		report[metricKey] = metricValue;
 	} );
 
-	db.Perf.create( toSave ).complete( function(err, res){
-		console.log( err, res );
+	db.Perf.create( report ).error( function(res){
+		logger.info( res );
 	} );
-
-	db.Urls.destroy({where:{id:runningId}} ).complete(function(err,res){
-		if( !err ){
-			console.log('remove in urls where id=:' + runningId );
-		}else{
-			console.log('error remove in urls where id=:' + runningId );
-		}
-	});
 } );
 
 pt.on( 'error', function(res){
-	console.log( res );
+	logger.info( res );
 } );
 
-pt.on('end',function(res){
-	console.log( res );
-});
+pt.on( 'end', function(res){
+	if( runstep == 1 ){
+		deleteTaskUrl();
+	}
+	runing = false;
+} );
 
-var CronJob = require( 'cron' ).CronJob;
+var deleteTaskUrl = function(){
+	db.TaskUrls.find( { limit:1 } ).success( function(res){
+		res.destroy().on( 'success', function(u){
+			if( u && u.deletedAt ){}
+		} );
+	} ).error( function(res){
+		logger.info( res );
+	} );
+}
 
-var cronJob = new CronJob( '*/20 * * * * *', function(){
-	/*
-	db.Urls.find( { limit:1 } ).complete( function(err, res){
+var getTaskUrl = function(callback){
+	db.TaskUrls.find( { limit:1 } ).complete( function(err, res){
 		if( !err && res && res.dataValues ){
 			var dataValues = res.dataValues;
-			var id = dataValues.id;
-			var url = dataValues.url;
-			runningId = id;
-			pt.changeUrl( url );
-			pt.start();
+			callback( dataValues.url );
+		}else{
+			callback( '' );
 		}
 	} );
-	*/
+}
+
+var addTaskUrl = function(){
+	db.Urls.findAll().success( function(res){
+		lodash.forEach( res, function(item, index){
+			var rowData = item.dataValues;
+			db.TaskUrls.create( {url:rowData['url']} ).success( function(res){
+			} ).error( function(res){
+				logger.info( res );
+			} );
+		} );
+	} ).error( function(res){
+		logger.info( res );
+	} );
+}
+
+//pagetimeline定时任务,每20s
+var pagetimelineCronJob = new CronJob( '*/20 * * * * *', function(){
+	if( !runing ){
+		runing = true;
+		runstep = 1;
+		getTaskUrl( function(url){
+			logger.info( url );
+			if( url ){
+				pt.changeUrl( url );
+				pt.start();
+			}
+		} );
+	}
+}, null, true, "Asia/Shanghai" );
+
+//创建任务url定时任务，每天
+var addTaskUrlCronJob = new CronJob( '* * 0 * * *', function(){
+	addTaskUrl();
 }, null, true, "Asia/Shanghai" );
 
 module.exports = lodash.extend( {
-	schedule:cronJob,
+	schedule:pagetimelineCronJob,
 	pagetimeline:pt
-}, perf );
+} );
 

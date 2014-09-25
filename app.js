@@ -13,6 +13,7 @@ var trend = require('./routes/trend');
 var comp = require('./routes/comp');
 
 var db = require( './models' );
+var log = require('./log');
 var app = express();
 
 // view engine setup;
@@ -23,6 +24,7 @@ app.set( 'view engine', 'jade' );
 //timezone
 app.set('tz', 'Asia/Shanghai');
 
+log.use( app );
 app.use( favicon() );
 app.use( logger( 'dev' ) );
 app.use( bodyParser.json() );

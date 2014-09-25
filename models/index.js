@@ -8,12 +8,18 @@ var lodash = require( 'lodash' );
 var dbName = 'pagetimeline.db';
 var db = {}
 
-var dbPath = path.resolve( __dirname, dbName );
-var sequelize = new Sequelize( 'database_name', 'username', 'password', {
-	dialect:'sqlite',
-	storage:dbPath
+var sequelize = new Sequelize( 'ppas', 'root', '5460300', {
+	dialect:'mysql',
+	port:3306
 } );
 
+sequelize.authenticate().complete( function(err){
+		if( !!err ){
+			console.log( 'Unable to connect to the database:', err )
+		}else{
+			console.log( 'Connection has been established successfully.' )
+		}
+	} )
 
 fs.readdirSync( __dirname ).filter( function(file){
 	return (file.indexOf( '.' ) !== 0) && (file !== 'index.js') && ( file != dbName) && (file !== 'metrics_trend.js')
