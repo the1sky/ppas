@@ -5,8 +5,6 @@ $( document ).ready( function(){
 	var today = $.getDateStr( 0, '2014-08-23' );
 	var startDate = today;
 	var endDate = today;
-	var startDate = $.getDateStr( 0, '2014-08-20' );
-	var endDate = $.getDateStr( 0, '2014-08-31' );
 	var chart_list = {};
 
 	/**

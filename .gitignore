@@ -5,3 +5,5 @@ TimelineRawData-20140825T133505.json
 node_modules
 ppas.iml
 perf/all
+config/mysql.json
+logs/log.log

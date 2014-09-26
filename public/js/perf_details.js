@@ -2,7 +2,6 @@ $( document ).ready( function(){
 	$( '#menu_details' ).css( 'background-color', '#f9f9f9' );
 
 	var getUrlData = function(url){
-		console.log( url );
 		$.ajax( {
 			'url':'/details/query',
 			'type':'post',
@@ -57,8 +56,8 @@ $( document ).ready( function(){
 		$( '#request_count_content strong' ).html( json['total_requests'] );
 		$( '#first_screen_time_content strong' ).html( json['first_screen_time'] );
 		$( '#white_screen_time_content strong' ).html( json['white_screen_time'] );
-		$( '#domready_content strong' ).html( json['domreadyEvent'] );
-		$( '#onload_content strong' ).html( json['onloadEvent'] );
+		$( '#domready_content strong' ).html( json['domready_event'] );
+		$( '#onload_content strong' ).html( json['onload_event'] );
 		$( '#ttfb_content strong' ).html( json['timing_ttfb'] );
 		$( '#dom_count_content strong' ).html( json['dom_count'] );
 		$( '#paint_time_content strong' ).html( json['paint_time'] );

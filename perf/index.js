@@ -47,13 +47,14 @@ pt.on( 'report', function(res){
 } );
 
 pt.on( 'error', function(res){
-	logger.info( res );
+	logger.error( res );
+	deleteTaskUrl();
+	runing = false;
 } );
 
 pt.on( 'end', function(res){
-	if( runstep == 1 ){
-		deleteTaskUrl();
-	}
+	logger.info( 'end' );
+	deleteTaskUrl();
 	runing = false;
 } );
 

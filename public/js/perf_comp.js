@@ -4,10 +4,8 @@ $( document ).ready( function(){
 	var selectedUrl = '';
 	var compUrl = '';
 	var today = $.getDateStr( 0 );
-	//var startDate = today;
-	//var endDate = today;
-	var startDate = $.getDateStr( 0, '2014-08-20' );
-	var endDate = $.getDateStr( 0, '2014-08-31' );
+	var startDate = today;
+	var endDate = today;
 
 	var chart_list = {};
 
