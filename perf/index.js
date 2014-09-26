@@ -20,9 +20,10 @@ var pt = new ptModule( {config:ptConfig} );
 
 pt.on( 'report', function(res){
 	var result = JSON.parse( res );
-
-	var runstep = result['runstep']
 	var report = {};
+
+	runstep = result['runstep']
+
 	report['url'] = result['url'];
 	report['runstep'] = runstep;
 	report['uid'] = result['uid'];
@@ -59,7 +60,8 @@ pt.on( 'end', function(res){
 var deleteTaskUrl = function(){
 	db.TaskUrls.find( { limit:1 } ).success( function(res){
 		res.destroy().on( 'success', function(u){
-			if( u && u.deletedAt ){}
+			if( u && u.deletedAt ){
+			}
 		} );
 	} ).error( function(res){
 		logger.info( res );

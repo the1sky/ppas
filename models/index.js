@@ -5,24 +5,36 @@ var fs = require( 'fs' );
 var path = require( 'path' );
 var Sequelize = require( 'sequelize' );
 var lodash = require( 'lodash' );
-var dbName = 'pagetimeline.db';
-var db = {}
+var logger = require( '../log' ).logger;
+var dbConfig = {};
+var db = {};
 
-var sequelize = new Sequelize( 'ppas', 'root', '5460300', {
+try{
+	dbConfig = JSON.parse( fs.readFileSync( path.resolve( __dirname, '../config/mysql.json') ) );
+}catch( ex ){
+	dbConfig = {
+		"database":"ppas",
+		"port":3306,
+		"user":"root",
+		"pwd":""
+	}
+}
+
+var sequelize = new Sequelize( dbConfig.database, dbConfig.user, dbConfig.pwd, {
 	dialect:'mysql',
-	port:3306
+	port:dbConfig.port
 } );
 
 sequelize.authenticate().complete( function(err){
-		if( !!err ){
-			console.log( 'Unable to connect to the database:', err )
-		}else{
-			console.log( 'Connection has been established successfully.' )
-		}
-	} )
+	if( !!err ){
+		logger.error( 'Unable to connect to the database:', err )
+	}else{
+		logger.info( 'Connection has been established successfully.' )
+	}
+} )
 
 fs.readdirSync( __dirname ).filter( function(file){
-	return (file.indexOf( '.' ) !== 0) && (file !== 'index.js') && ( file != dbName) && (file !== 'metrics_trend.js')
+	return (file.indexOf( '.' ) !== 0) && (file !== 'index.js') && (file !== 'metrics_trend.js')
 } ).forEach( function(file){
 	var model = sequelize.import( path.join( __dirname, file ) )
 	db[model.name] = model
