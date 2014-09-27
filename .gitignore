@@ -7,3 +7,4 @@ ppas.iml
 perf/all
 config/mysql.json
 logs/log.log
+logs

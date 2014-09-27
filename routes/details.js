@@ -28,7 +28,7 @@ router.post( '/query', function(req, res){
 			var elementSizeDistExtra = [];
 			_.forEach( data, function(value, key){
 				//element count and size
-				if( !/total_requests|big_requests|slow_requests/.test( key ) && /requests$/.test( key ) ){
+				if( !/total_requests|big_requests|slow_requests|image_request/.test( key ) && /requests$/.test( key ) ){
 					var flag = key.substr( 0, key.indexOf( '_' ) );
 					elementCountDistExtra.push( {name:flag, value:value} );
 					elementSizeDistExtra.push( {name:flag, value:data[flag + '_size']} );

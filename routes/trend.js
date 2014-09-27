@@ -28,6 +28,7 @@ router.post( '/query', function(req, res){
 		} );
 		attributes.push( 'url' );
 		attributes.push( 'day' );
+		attributes.push( 'runstep' );
 
 		var startDate = moment( body.start ).format( 'YYYYMMDD' );
 		var endDate = moment( body.end ).format( 'YYYYMMDD' );

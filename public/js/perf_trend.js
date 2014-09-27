@@ -2,7 +2,7 @@ $( document ).ready( function(){
 	$( '#menu_trend' ).css( 'background-color', '#f9f9f9' );
 
 	var selectedUrl = '';
-	var today = $.getDateStr( 0, '2014-08-23' );
+	var today = $.getDateStr( 0 );
 	var startDate = today;
 	var endDate = today;
 	var chart_list = {};
