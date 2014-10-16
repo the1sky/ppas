@@ -1,9 +1,9 @@
-$( document ).ready( function(){
-	$( '#menu_trend' ).css( 'background-color', '#f9f9f9' );
+$(document).ready(function () {
+	$('#menu_trend').css('background-color', '#f9f9f9');
 
 	var selectedUrl = '';
-	var today = $.getDateStr( 0 );
-	var startDate = today;
+	var today = $.getDateStr(0);
+	var startDate = $.getDateStr(-7);
 	var endDate = today;
 	var chart_list = {};
 
@@ -16,37 +16,37 @@ $( document ).ready( function(){
 	 * @param selectedUrlData
 	 * @returns {{title: {text: *}, tooltip: {trigger: string}, legend: {data: *}, calculable: boolean, xAxis: {type: string, data: *}[], yAxis: {type: string, name: string, splitNumber: number}[], series: {name: *, type: string, data: *}[]}}
 	 */
-	var echartsOption = function(title, legendData, xAxisData, selectedUrlData){
+	var echartsOption = function (title, legendData, xAxisData, selectedUrlData) {
 		var selectedUrl = legendData[0];
 		return {
-			title:{
-				text:title
+			title: {
+				text: title
 			},
-			tooltip:{
-				trigger:'axis'
+			tooltip: {
+				trigger: 'axis'
 			},
-			legend:{
-				data:legendData
+			legend: {
+				data: legendData
 			},
-			calculable:true,
-			xAxis:[
+			calculable: true,
+			xAxis: [
 				{
-					type:'category',
-					data:xAxisData
+					type: 'category',
+					data: xAxisData
 				}
 			],
-			yAxis:[                                    // 直角坐标系中纵轴数组
+			yAxis: [ // 直角坐标系中纵轴数组
 				{
-					type:'value',                      // 坐标轴类型，纵轴默认为数值轴，类目轴则参考xAxis说明
-					name:'',
-					splitNumber:4                      // 数值轴用，分割段数，默认为5
+					type: 'value', // 坐标轴类型，纵轴默认为数值轴，类目轴则参考xAxis说明
+					name: '',
+					splitNumber: 4 // 数值轴用，分割段数，默认为5
 				}
 			],
-			series:[
+			series: [
 				{
-					name:selectedUrl,
-					type:'line',
-					data:selectedUrlData
+					name: selectedUrl,
+					type: 'line',
+					data: selectedUrlData
 				}
 			]
 		};
@@ -58,12 +58,15 @@ $( document ).ready( function(){
 	 * @param id
 	 * @returns {{id: *, div: (*|jQuery|HTMLElement)}}
 	 */
-	var createChartContainer = function(id){
-		var div = $( '<div></div>' );
-		div.attr( 'id', id );
-		div.addClass( 'trendChart' );
-		$( '#trend' ).prepend( div );
-		return {id:id, div:div}
+	var createChartContainer = function (id) {
+		var div = $('<div></div>');
+		div.attr('id', id);
+		div.addClass('trendChart');
+		$('#trend').prepend(div);
+		return {
+			id: id,
+			div: div
+		}
 	};
 
 	/**
@@ -71,24 +74,24 @@ $( document ).ready( function(){
 	 *
 	 * @param jqObj
 	 */
-	var renderChart = function(jqObj){
+	var renderChart = function (jqObj) {
 		var metric = jqObj.val();
-		var desc = jqObj.attr( 'desc' );
-		var yAxisData = getYAxisData( selectedUrl, metric, $.xAxisData );
+		var desc = jqObj.attr('desc');
+		var yAxisData = getYAxisData(selectedUrl, metric, $.xAxisData);
 		var id = metric + '_chart';
-		chart_list[id] = createChartContainer( id );
+		chart_list[id] = createChartContainer(id);
 		var div = chart_list[id]['div'];
-		$( '#trend' ).prepend( div );
-		var chart = echarts.init( document.getElementById( id ), e_macarons );
+		$('#trend').prepend(div);
+		var chart = echarts.init(document.getElementById(id), e_macarons);
 		chart_list[id].chart = chart;
 
 		var legendData = [selectedUrl];
-		if( yAxisData ){
-			chart.setOption( echartsOption( desc, legendData, $.xAxisData, yAxisData ) );
+		if (yAxisData) {
+			chart.setOption(echartsOption(desc, legendData, $.xAxisData, yAxisData));
 		}
 
 		//滚动到
-		$.scrollTo( 'metricslist' );
+		$.scrollTo('metricslist');
 	}
 
 	/**
@@ -96,82 +99,85 @@ $( document ).ready( function(){
 	 *
 	 * @param id
 	 */
-	var removeChart = function(id){
+	var removeChart = function (id) {
 		var chartInfo = chart_list[id];
-		if( chartInfo ){
-			if( chartInfo.chart ){
+		if (chartInfo) {
+			if (chartInfo.chart) {
 				chartInfo.chart.clear();
 				chartInfo.chart.dispose();
 			}
 			id = '#' + id;
-			$( id ).remove();
+			$(id).remove();
 		}
 	}
 
 	/**
 	 * 删除所有图表
 	 */
-	var removeAllCharts = function(){
-		for( var id in chart_list ){
-			removeChart( id );
+	var removeAllCharts = function () {
+		for (var id in chart_list) {
+			removeChart(id);
 		}
 	}
 
 	/**
 	 * 设置checkbox
 	 */
-	$( '.metriclist' ).iCheck( {
-		checkboxClass:'icheckbox_flat-green',
-		radioClass:'iradio_flat-green',
-		increaseArea:'20%' // optional
-	} );
-	$( '.metriclist' ).on( 'ifChecked', function(e){
-		if( $.perfData ){
-			renderChart( $( this ) );
+	$('.metriclist').iCheck({
+		checkboxClass: 'icheckbox_flat-green',
+		radioClass: 'iradio_flat-green',
+		increaseArea: '20%' // optional
+	});
+	$('.metriclist').on('ifChecked', function (e) {
+		if ($.perfData) {
+			renderChart($(this));
 		}
-	} ).on( 'ifUnchecked', function(e){
-		var metric = $( this ).val();
+	}).on('ifUnchecked', function (e) {
+		var metric = $(this).val();
 		var id = metric + '_chart';
-		removeChart( id );
-	} )
+		removeChart(id);
+	})
 
 
 	/**
 	 * 时间选择
 	 *
 	 */
-	var dateRange = new pickerDateRange( 'date_picker', {
-		isTodayValid:true,
-		startDate:startDate,
-		endDate:endDate,
-		autoSubmit:true,
-		theme:'ta',
-		defaultText:' 至 ',
-		success:function(obj){
+	var dateRange = new pickerDateRange('date_picker', {
+		isTodayValid: true,
+		startDate: startDate,
+		endDate: endDate,
+		autoSubmit: true,
+		theme: 'ta',
+		defaultText: ' 至 ',
+		success: function (obj) {
 			startDate = obj['startDate'];
 			endDate = obj['endDate'];
-			$.getTrendData( selectedUrl, startDate, endDate, function(json){
-				preRender( json );
-			} )
+			$.getTrendData(selectedUrl, startDate, endDate, function (json) {
+				preRender(json);
+			})
 		}
-	} );
+	});
 
 	/**
 	 * 横坐标数据
 	 *
 	 * @returns {Array}
 	 */
-	var getXAxisData = function(){
+	var getXAxisData = function () {
 		var len = $.perfData.length;
 		var timeObj = {};
-		for( var i = 0; i < len; i++ ){
+		for (var i = 0; i < len; i++) {
 			var item = $.perfData[i];
-			var time = item.updatedAt;
-			timeObj[time] = 1;
+			var runstep = item['runstep'];
+			if( runstep == 1 ){
+				var time = item.updatedAt;
+				timeObj[time] = 1;
+			}
 		}
 		var timeArr = [];
-		for( var time in timeObj ){
-			timeArr.push( new Date( time ).Format("yyyy-MM-dd hh:mm:ss") );
+		for (var time in timeObj) {
+			timeArr.push(new Date(time).Format("yyyy-MM-dd hh:mm:ss"));
 		}
 		return timeArr;
 	}
@@ -184,12 +190,20 @@ $( document ).ready( function(){
 	 * @param daysArr
 	 * @returns {Array}
 	 */
-	var getYAxisData = function(selectedUrl, metric, daysArr){
+	var getYAxisData = function (selectedUrl, metric, daysArr) {
 		var len = $.perfData.length;
+		console.log( $.perfData);
 		var urlData = [];
-		for( var i = 0; i < len; i++ ){
+		for (var i = 0; i < len; i++) {
 			var item = $.perfData[i];
-			urlData.push( item[metric] );
+			var runstep = item['runstep'];
+			var metricValue = item[metric];
+			if( metricValue < 0 ){
+				metricValue = 0;
+			}
+			if (runstep == 1) {
+				urlData.push(metricValue);
+			}
 		}
 		return urlData;
 	}
@@ -198,20 +212,20 @@ $( document ).ready( function(){
 	 * render前数据处理
 	 * @param json
 	 */
-	var preRender = function(json){
-		if( json && json.code == 0 && json.data && json.data.length > 0 ){
+	var preRender = function (json) {
+		if (json && json.code == 0 && json.data && json.data.length > 0) {
 			removeAllCharts();
 
 			$.perfData = json.data;
 			$.xAxisData = getXAxisData();
-			var checked = $( '.metriclist:checkbox:checked' );
+			var checked = $('.metriclist:checkbox:checked');
 			var len = checked.length;
-			for( var i = 0; i < len; i++ ){
-				var jqObj = $( checked[i] );
-				renderChart( jqObj );
+			for (var i = 0; i < len; i++) {
+				var jqObj = $(checked[i]);
+				renderChart(jqObj);
 			}
-		}else{
-			console.log( 'json data null!' );
+		} else {
+			console.log('json data null!');
 		}
 	}
 
@@ -220,22 +234,21 @@ $( document ).ready( function(){
 	 *
 	 * @type {*|jQuery|HTMLElement}
 	 */
-	var selector = $( '#urls' );
-	selector.minimalect( {
-		'afterinit':function(){
-			var url = $.getUrlParam( 'url' );
-			if( !url ){
-				var firstUrl = $( '#urls option' )[0].value.toString();
+	var selector = $('#urls');
+	selector.minimalect({
+		'afterinit': function () {
+			var url = $.getUrlParam('url');
+			if (!url) {
+				var firstUrl = $('#urls option')[0].value.toString();
 				selectedUrl = firstUrl;
 			}
-			selector.val( selectedUrl ).change();
+			selector.val(selectedUrl).change();
 		},
-		'onchange':function(val, txt){
+		'onchange': function (val, txt) {
 			selectedUrl = val;
-			$.getTrendData( val, startDate, endDate, function(json){
-				preRender( json );
-			} );
+			$.getTrendData(val, startDate, endDate, function (json) {
+				preRender(json);
+			});
 		}
-	} );
-} );
-
+	});
+});

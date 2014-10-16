@@ -4,7 +4,7 @@ $( document ).ready( function(){
 	var selectedUrl = '';
 	var compUrl = '';
 	var today = $.getDateStr( 0 );
-	var startDate = today;
+	var startDate = $.getDateStr(-7);
 	var endDate = today;
 
 	var chart_list = {};
@@ -166,7 +166,10 @@ $( document ).ready( function(){
 		for( var i = 0; i < len; i++ ){
 			var item = $.perfData[i];
 			var day = item.day;
-			daysObj[day] = 1;
+			var runstep = item['runstep'];
+			if( runstep == 1){
+				daysObj[day] = 1;
+			}
 		}
 		var daysArr = [];
 		for( var day in daysObj ){
@@ -182,6 +185,11 @@ $( document ).ready( function(){
 			var item = $.perfData[i];
 			var url = item.url;
 			var day = item.day;
+			var runstep = item['runstep'];
+			var metricValue = item[metric];
+			if( metricValue < 0 ){
+				metricValue = 0;
+			}
 
 			if( !urlData[url] ){
 				urlData[url] = {};
@@ -189,7 +197,9 @@ $( document ).ready( function(){
 			if( !urlData[url][day] ){
 				urlData[url][day] = {};
 			}
-			urlData[url][day] = item[metric];
+			if( runstep == 1 ){
+				urlData[url][day] = metricValue;
+			}
 		}
 
 		var selectUrlData = [];

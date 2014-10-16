@@ -127,6 +127,12 @@ a {
     font-size: 22px;
 }
 
+#main .sorting_1 {
+	width: 300px;
+	max-width: 500px;
+	overflow: hidden;
+}
+
 #dist_chart_container {
     margin-top: -20px;
 }
